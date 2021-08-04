@@ -17,7 +17,7 @@ public class EnemyAI : MonoBehaviour
 
     // Navigation info
     [SerializeField] private NavMeshAgent agent; // Pathfinding
-    public Transform player; // The player to target
+    public Transform playerRig; // The player to target
     public LayerMask Ground, Player;
 
     // Patrol
@@ -32,7 +32,7 @@ public class EnemyAI : MonoBehaviour
     public float sightRange, attackRange;
     private bool playerInSightRange, playerInAttackrange;
 
-
+    public EnemySpawner enemySpawner= null;
 
     private void Awake()
     {
@@ -74,13 +74,13 @@ public class EnemyAI : MonoBehaviour
 
     private void Chase()
     {
-        agent.SetDestination(player.position);
+        agent.SetDestination(playerRig.position);
     }
 
     private void Attack()
     {
         agent.SetDestination(transform.position); // Halt the enemy
-        transform.LookAt(player);
+        transform.LookAt(playerRig);
 
         if (!attacked)
         {
@@ -111,5 +111,9 @@ public class EnemyAI : MonoBehaviour
     private void DestroyEnemy()
     {
         Destroy(gameObject);
+        if (enemySpawner != null)
+        {
+            enemySpawner.enemyCount--;
+        }
     }
 }

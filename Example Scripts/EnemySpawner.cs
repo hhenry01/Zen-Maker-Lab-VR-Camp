@@ -9,18 +9,22 @@ public class EnemySpawner : MonoBehaviour
     public GameObject enemy;
     public List<Transform> spawnLocations;
     public float respawnDelay = 2;
+    public int enemyCount = 0;
+    public int maxEnemies = 20;
 
-    public void Start()
+    private float nextTime = 0;
+
+    private void Update()
     {
-        Invoke(nameof(SpawnEnemy), respawnDelay);
+        if (enemyCount < maxEnemies && Time.time > nextTime)
+        {
+            nextTime = Time.time + respawnDelay;
+            Debug.Log("Spawning new enemy " + enemyCount);
+            enemyCount++;
+            System.Random rand = new System.Random();
+            int location = rand.Next(0, spawnLocations.Count);
+            Instantiate(enemy, spawnLocations[location].position, spawnLocations[location].rotation);
+        }
     }
 
-    public void SpawnEnemy()
-    {
-        Debug.Log("Spawning new enemy");
-        System.Random rand = new System.Random();
-        int location = rand.Next(0, spawnLocations.Count);
-        Instantiate(enemy, spawnLocations[location].position, spawnLocations[location].rotation);
-        Invoke(nameof(SpawnEnemy), respawnDelay);
-    }
 }
